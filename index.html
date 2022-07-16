@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>머리카락 짤 생성기</title>
+	<style>
+		ul{font-size: 50px;}
+		input{font-size:50px;}
+	</style>
+</head>
+<body>
+	<h1>머리카락 짤 생성기</h1>
+	<hr>
+
+
+    <br><br><br><ul>
+    <li><input type="file" id="getfile" accept="image/*" style="font-size:100px;"></li></ul>
+    <br><br><br><br>
+
+
+
+<canvas onclick ="dualss(event);" id="mycanvas"  ></canvas>
+    <ul>
+		<li>머리카락 가로 길이 (현재값: <a id='result1'></a>) <br>
+			<a onclick="one100()">[+100]</a><a>//</a> 
+			<a onclick="one10()">[+10]</a><a>//</a>
+			<a onclick="onem10()">[-10]</a><a>//</a>
+			<a onclick="onem100()">[-100]</a></li>
+		<br>
+	    <li>머리카락 세로 길이 (현재값: <a id='result2'></a>) <br>
+	    	<a onclick="two100()">[+100]</a> <a>//</a> 
+	    	<a onclick="two10()">[+10]</a> <a>//</a> 
+	    	<a onclick="twom10()">[-10]</a> <a>//</a>  
+	    	<a onclick="twom100()">[-100]</a></li>
+    </ul>
+
+
+
+
+    
+<h1>결과물</h1><br>
+    <a id="download" download="thumbnail.jpg" target="_blank"> <img id="preview" src="" > </a>
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+var ddw=300;
+document.getElementById("result1").innerText = ddw;
+var ddh=200;
+document.getElementById("result2").innerText = ddh;
+
+
+
+
+var x1;
+var y1;
+var x2;
+var y2;
+
+
+
+
+function one100(){
+	ddw +=100;
+	document.getElementById("result1").innerText = ddw;
+}
+function one10(){
+	ddw +=10;
+	document.getElementById("result1").innerText = ddw;
+}
+function onem10(){
+	ddw -=10;
+	document.getElementById("result1").innerText = ddw;
+}
+function onem100(){
+	ddw -=100;
+	document.getElementById("result1").innerText = ddw;
+}
+
+function two100(){
+	ddh +=100;
+	document.getElementById("result2").innerText = ddh;
+}
+function two10(){
+	ddh +=10;
+	document.getElementById("result2").innerText = ddh;
+}
+function twom10(){
+	ddh -=10;
+	document.getElementById("result2").innerText = ddh;
+}
+function twom100(){
+	ddh -=100;
+	document.getElementById("result2").innerText = ddh;
+}
+
+
+
+
+
+
+
+var canvas = document.querySelector('#mycanvas');
+var context = canvas.getContext("2d");
+context.globalCompositeOperation = "source-over";
+
+
+
+
+
+
+var $file = document.querySelector('#getfile');
+var baseImage = new Image();
+var dusrc="hair.png";
+var dusrc2="hair.png";
+
+
+
+
+
+$file.onchange = function () { 
+    var fileList = $file.files;
+    var reader = new FileReader();
+    reader.readAsDataURL(fileList [0]);
+    reader.onload = function  () {
+        baseImage.src = reader.result; //data-uri를 이미지 객체에 주입
+        baseImage.onload = function () {
+        	canvas.width = baseImage.width;
+        	canvas.height = baseImage.height;
+            context.drawImage(this, 0, 0, baseImage.width, baseImage.height);
+            var dataURI = canvas.toDataURL("image/jpeg");
+            document.querySelector('#preview').width = baseImage.width;
+            document.querySelector('#preview').height = baseImage.height;
+            document.querySelector('#preview').src = dataURI; 
+        };
+    };
+};
+
+
+
+
+function dualss() {
+
+  var canvas = document.querySelector('#mycanvas');
+  var context = canvas.getContext('2d');
+
+  x1 = event.offsetX;
+  y1 = event.offsetY;
+  context.drawImage(baseImage, 0, 0, baseImage.width, baseImage.height);
+
+  var duImage2 = new Image(); //drawImage 메서드에 넣기 위해 이미지 객체화
+  duImage2.src = dusrc2;
+  var duImage = new Image(); //drawImage 메서드에 넣기 위해 이미지 객체화
+  duImage.src = dusrc;
+
+  duImage.onload = function(){
+  	context.drawImage(this, x1-(ddw/2), y1-(ddh/2), ddw, ddh);
+  	context.drawImage(duImage2, x2-(ddw2/2), y2-(ddh2/2), ddw2, ddh2);
+  	var dataURI = canvas.toDataURL("image/jpeg");
+    document.querySelector('#preview').src = dataURI;
+    document.querySelector('#download').href = dataURI;
+
+  }
+
+}
+
+
+
+    </script>
+
+</body>
+</html>
